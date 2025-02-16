@@ -1,6 +1,7 @@
 import Student from "../../models/Student.model.js";
 import Admin from "../../models/Admin.model.js";
 import Teacher from "../../models/Teacher.model.js"
+import Doctor from "../../models/Doctor.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -292,4 +293,81 @@ const logoutTeacher = async (req, res) => {
     })
 }
 
-export { registerStudent, loginStudent, logoutStudent, loginAdmin, logoutAdmin, registerTeacher, loginTeacher, logoutTeacher  };
+const loginDoctor = async (req, res) => {
+    try {
+
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and password are required."
+            });
+        }
+
+        const doctor = await Doctor.findOne({ email });
+        if (!doctor) {
+            return res.status(404).json({
+                success: false,
+                message: "Doctor not found."
+            });
+        }
+
+        const isMatch = await bcrypt.compare(password, doctor.password);
+        if (!isMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid credentials."
+            });
+        }
+
+        const token = jwt.sign({
+            userId : doctor._id,
+            role : doctor.role
+        }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        }); 
+
+        res.status(200).json({
+            success: true,
+            message: "Doctor logged in successfully.",
+            token
+        });
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Server error during login."
+        })
+    }
+}
+
+const logoutDoctor = async (req, res) => {
+    try {
+
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",  
+            sameSite: "none"
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Doctor logged out successfully."
+        });
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Server error during logout."
+        });
+    }
+}
+
+export { registerStudent, loginStudent, logoutStudent, loginAdmin, logoutAdmin, registerTeacher, loginTeacher, logoutTeacher , loginDoctor, logoutDoctor };
