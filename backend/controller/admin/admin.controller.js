@@ -75,4 +75,58 @@ const verifyTeacher = async (req, res) => {
     }
 }
 
-export { verifyStudent, verifyTeacher };
+const fetchUnverifiedStudents = async (req, res) => {
+    try {
+
+        const unverifiedStudents = await Student.find({ isVerified: false });
+        
+        if (unverifiedStudents.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No students are awaiting verification."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Unverified students fetched successfully.",
+            students: unverifiedStudents
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Server error while fetching unverified students."
+        });
+    }
+}
+
+const fetchUnverifiedTeachers = async (req, res) => {
+    
+    try {
+        const unverifiedTeachers = await Teacher.find({ isVerified: false });
+
+        if (unverifiedTeachers.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No teachers are awaiting verification."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Unverified teachers fetched successfully.",
+            teachers: unverifiedTeachers
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Server error while fetching unverified teachers."
+        });
+    }
+}
+
+export { verifyStudent, verifyTeacher, fetchUnverifiedStudents, fetchUnverifiedTeachers };
