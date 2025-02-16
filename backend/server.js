@@ -4,6 +4,9 @@ import mongoose from 'mongoose'
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
+import adminRouter from './routes/adminRoutes.js';
+import authRouter from './routes/authRoutes.js';
+
 dotenv.config()
 
 mongoose
@@ -14,13 +17,17 @@ mongoose
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.set('trust proxy', 1);
+app.use(express.json());
+app.use(cookieParser());
+
 app.use(
     cors({
-        origin : "http://localhost:5173",
+        // origin : "http://localhost:5173",
         methods : ['GET', 'POST', 'DELETE', 'PUT'],
         allowedHeaders : [
             "Content-Type",
-            "Autherization",
+            "Authorization",
             "Cache-Control",
             "Expires",
             "Pragma"
@@ -29,8 +36,17 @@ app.use(
     })
 );
 
-app.use(cookieParser());
-app.use(express.json());
+
+app.use("/api/auth", authRouter); 
+app.use("/api/admin", adminRouter);
+
+app.get("/api/test", (req, res) => {
+    res.status(200).json({ message: "API is working!" });
+});
+
+app.use((req, res, next) => {
+    res.status(404).json({ message: "Route not found" });
+});
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`)
 )
