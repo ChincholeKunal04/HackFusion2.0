@@ -72,6 +72,20 @@ const studentSchema = new Schema({
           return this.isCandidate;
         }
     },
+    parentEmail: {
+        type: String,
+        required: true,
+        match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    },
+    parentPhone: {
+        type: String,
+        required: true,
+        match: /^[0-9]{10}$/
+    },
+    classCoordinator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Teacher"
+    },
     bookings: [
         {
           facilityId: {

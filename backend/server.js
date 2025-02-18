@@ -6,6 +6,9 @@ import cookieParser from 'cookie-parser';
 
 import adminRouter from './routes/adminRoutes.js';
 import authRouter from './routes/authRoutes.js';
+import studentRouter from './routes/studentRoutes.js';
+import doctorRouter from './routes/doctorRoutes.js';
+import teacherRouter from './routes/teacherRoutes.js';
 
 dotenv.config()
 
@@ -37,8 +40,12 @@ app.use(
 );
 
 
+
 app.use("/api/auth", authRouter); 
 app.use("/api/admin", adminRouter);
+app.use("/api/student", studentRouter);
+app.use("/api/doctor", doctorRouter);
+app.use("/api/teacher", teacherRouter);
 
 app.get("/api/test", (req, res) => {
     res.status(200).json({ message: "API is working!" });
