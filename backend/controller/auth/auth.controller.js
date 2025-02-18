@@ -97,10 +97,17 @@ const loginStudent = async (req, res) => {
             secure: true,
             sameSite: "none"
         }); 
+
+        const studentData = {
+            _id: student._id,
+            email: student.email,
+            role: student.role
+        };
         
         res.status(200).json({ 
             success: true,
-            message: "Student logged in successfully."
+            message: "Student logged in successfully.",
+            user : studentData
         });
         
     } catch (error) {
@@ -160,16 +167,23 @@ const loginAdmin = async (req, res) => {
             sameSite: "none"
         }); 
 
+        const adminData = {
+            _id: admin._id,
+            email: admin.email,
+            role: admin.role
+        };
+
         res.status(200).json({
             success: true,
             message: "Admin login successful.",
+            user : adminData
         });
 
     } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
-            message: "Server error during admin login."
+            message: "Server error during admin login.",
         });
     }
 }
