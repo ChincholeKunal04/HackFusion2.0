@@ -1,6 +1,7 @@
 import express from 'express'
 import { getStudentProfile, updateStudentProfile, reportSickness, reportLeave, fetchAllHealthReports, fetchHealthReportStatus, fetchAllLeaveReports } from '../controller/student/student.controller.js'
-import { verifyStudent } from '../middleware/verifyStudent.middleware.js'
+import { verifyStudent } from '../middleware/verifyStudent.middleware.js';
+
 
 const studentRouter = express.Router();
 
