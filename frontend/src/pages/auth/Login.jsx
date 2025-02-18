@@ -15,7 +15,7 @@ const AuthLogin = () => {
 
     const onSubmit = (event) => {
         event.preventDefault();
-
+        console.log(formData)
         // Determine which action to dispatch based on the selected role
         if (formData.role === 'student') {
             dispatch(loginStudent(formData)); // Call loginStudent action

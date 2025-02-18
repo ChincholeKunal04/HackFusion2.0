@@ -254,7 +254,7 @@ const authSlice = createSlice({
                     sessionStorage.removeItem("user");
                 }
             })
-            .addCase(loginAdmin.rejected, (state) => {
+            .addCase(loginAdmin.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
