@@ -1,5 +1,9 @@
 import Student from "../../models/Student.model.js";
 import Teacher from "../../models/Teacher.model.js";
+import Admin from "../../models/Admin.model.js"
+import Doctor from "../../models/Doctor.model.js";
+
+import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 
 const verifyStudent = async (req, res) => {
@@ -129,4 +133,134 @@ const fetchUnverifiedTeachers = async (req, res) => {
     }
 }
 
-export { verifyStudent, verifyTeacher, fetchUnverifiedStudents, fetchUnverifiedTeachers };
+const getAdminProfile = async (req, res) => {
+    try {
+
+        const adminId = req.user.userId;
+
+        const admin = await Admin.findById(adminId).select("-password");
+        if (!admin) {
+            return res.status(404).json({
+              success: false,
+              message: "Admin not found."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Admin profile fetched successfully.",
+            profile: admin
+        });
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Server error while fetching admin profile."
+        });
+    }
+}
+
+const addAdmin = async (req, res) => {
+    try {
+
+        const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(400).json({
+              success: false,
+              message: "Name, email, and password are required."
+            });
+        }
+
+        const existingAdmin = await Admin.findOne({ email });
+        if (existingAdmin) {
+        return res.status(400).json({
+            success: false,
+            message: "Email is already registered as an admin."
+        });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newAdmin = new Admin({
+            name,
+            email,
+            password: hashedPassword,
+            role: "admin",  
+            isVerified: true 
+        });
+
+        await newAdmin.save();
+        res.status(201).json({
+            success: true,
+            message: "New admin added successfully.",
+            admin: {
+              _id: newAdmin._id,
+              name: newAdmin.name,
+              email: newAdmin.email,
+              role: newAdmin.role
+            }
+        });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+        success: false,
+        message: "Server error while adding new admin."
+        });
+    }
+}
+
+const addDoctor = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(400).json({
+              success: false,
+              message: "Name, email, and password are required."
+            });
+        }
+
+        const existingDoctor = await Doctor.findOne({ email });
+        if (existingDoctor) {
+        return res.status(400).json({
+            success: false,
+            message: "Email is already registered as a doctor."
+        });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newDoctor = new Doctor({
+            name,
+            email,
+            password: hashedPassword,
+            role: "doctor", 
+            isVerified: true  
+        });
+
+        await newDoctor.save();
+
+        res.status(201).json({
+            success: true,
+            message: "New doctor added successfully.",
+            doctor: {
+              _id: newDoctor._id,
+              name: newDoctor.name,
+              email: newDoctor.email,
+              role: newDoctor.role
+            }
+        });
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Server error while adding new doctor."
+        });
+    }
+}
+
+export { verifyStudent, verifyTeacher, fetchUnverifiedStudents, fetchUnverifiedTeachers, getAdminProfile, addAdmin, addDoctor };
