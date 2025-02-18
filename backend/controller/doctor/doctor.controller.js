@@ -6,44 +6,53 @@ const approveHealthReport = async (req, res) => {
     try {
         const { reportId } = req.params;
 
-        const report = await HealthReport.findByIdAndUpdate(
-            reportId,
-            { status: "approved" },
-            { new: true }
-        ).populate("student");
-  
+        const report = await HealthReport.findById(reportId).populate("student");
         if (!report) {
             return res.status(404).json({
-            success: false,
-            message: "Health report not found."
+                success: false,
+                message: "Health report not found."
             });
         }
   
-        if (report.isNotified) {
+        if (report.status !== "pending") {
             return res.status(400).json({
-            success: false,
-            message: "Notification already sent."
+              success: false,
+              message: "Only pending health reports can be approved."
             });
         }
 
+        
+        
         const student = await Student.findById(report.student).populate("classCoordinator");
         const coordinator = student.classCoordinator;
-  
+        
         if (!coordinator) {
             return res.status(404).json({
-            success: false,
-            message: "Class coordinator not found."
+                success: false,
+                message: "Class coordinator not found."
             });
         }
-  
+        
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: coordinator.email,
             subject: "Health Report Approved",
             text: `Dear ${coordinator.name},\n\n${student.name} has been reported sick and the health report has been approved.\n\nDetails: ${report.sicknessDetails}\n\nRegards,\nCollege Health Center`
         };
-    
+        
+        transporter.verify((error, success) => {
+            if (error) {
+                console.log("SMTP Connection Error:", error);
+            } else {
+                console.log("SMTP Server is ready to take messages:", success);
+            }
+        });
+        
         await transporter.sendMail(mailOptions);
+
+        report.status = "approved";
+        report.reportedBy = req.user.userId;  
+        await report.save();
 
         report.isNotified = true;
         await report.save();
@@ -52,6 +61,7 @@ const approveHealthReport = async (req, res) => {
             success: true,
             message: "Health report approved and coordinator notified."
         });
+
     } catch (error) {
         console.error("Error approving health report:", error);
         res.status(500).json({
@@ -85,6 +95,9 @@ const fetchAllHealthReports = async (req, res) => {
 
 const rejectHealthReport = async (req,res) => {
     try {
+
+        const { reportId } = req.params;
+
         const report = await HealthReport.findById(reportId);
     
         if (!report) {

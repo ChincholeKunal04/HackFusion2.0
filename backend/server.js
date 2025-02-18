@@ -40,6 +40,7 @@ app.use(
 );
 
 
+
 app.use("/api/auth", authRouter); 
 app.use("/api/admin", adminRouter);
 app.use("/api/student", studentRouter);

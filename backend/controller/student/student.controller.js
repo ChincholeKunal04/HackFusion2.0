@@ -101,7 +101,8 @@ const reportSickness = async (req, res) => {
 const reportLeave = async (req, res) => {
     try {
 
-        const { studentId, reason } = req.body;
+        const studentId = req.user.userId;
+        const { reason } = req.body;
 
         const newLeave = new LeaveReport({
             student: studentId,
@@ -137,7 +138,7 @@ const reportLeave = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        req.status(500).json({
+        res.status(500).json({
             success : false,
             message : "Internal server error when leave report send",
         })
@@ -207,7 +208,7 @@ const fetchAllLeaveReports = async (req, res) => {
       
         const studentId = req.user.userId;
 
-        const reports = await LeaveRequest.find({ student: studentId })
+        const reports = await LeaveReport.find({ student: studentId })
             .sort({ createdAt: -1 }); 
   
         res.status(200).json({
@@ -225,4 +226,4 @@ const fetchAllLeaveReports = async (req, res) => {
     }
 };
 
-export { getStudentProfile, updateStudentProfile, reportSickness, reportLeave, fetchAllHealthReports, fetchHealthReportStatus, fetchAllLeaveReports }
+export { getStudentProfile, updateStudentProfile, reportSickness, reportLeave, fetchAllHealthReports, fetchHealthReportStatus, fetchAllLeaveReports } 

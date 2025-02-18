@@ -266,9 +266,16 @@ const loginTeacher = async (req, res) => {
             sameSite: "none"
         }); 
 
+        const teacherData = {
+            _id : teacher._id,
+            email : teacher.email,
+            role : teacher.role
+        }
+
         res.status(200).json({
             success: true,
             message: "Teacher login successful.",
+            user : teacherData
         });
         
     } catch (error) {
@@ -332,10 +339,17 @@ const loginDoctor = async (req, res) => {
             sameSite: "none"
         }); 
 
+        const doctorData = {
+            _id : doctor._id,
+            email : doctor.email,
+            role : doctor.role
+        }
+
         res.status(200).json({
             success: true,
             message: "Doctor logged in successfully.",
-            token
+            token,
+            user : doctorData
         });
         
     } catch (error) {
