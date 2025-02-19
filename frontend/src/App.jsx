@@ -79,7 +79,9 @@ function App() {
 
                 <Route path="/student/*" element={<StudentLayout />}>
                 {/* Student Dashboard Route */}
-                <Route path="dashboard" element={<StudentDashboard />} />
+                <Route path="dashboard" element={   <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                            
+                        <StudentLayout/></CheckAuth>} />
 
                 {/* Election Section with Nested Routes */}
                 <Route path="election/*" element={<Election/>}/>
