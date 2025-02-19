@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginStudent, loginTeacher, loginAdmin} from "../../store/auth/index";
+import { loginStudent, loginTeacher, loginAdmin, loginDoctor} from "../../store/auth/index";
 import CommonForm from "../../components/comman/Form";
 
 
@@ -23,6 +23,8 @@ const AuthLogin = () => {
             dispatch(loginTeacher(formData)); // Call loginTeacher action
         } else if (formData.role === 'admin') {
             dispatch(loginAdmin(formData)); // Call loginAdmin action
+        } else if (formData.role === 'doctor') {
+            dispatch(loginDoctor(formData)); // Call loginDoctor action
         } else {
             console.error('Invalid role selected');
         }
@@ -40,6 +42,7 @@ const AuthLogin = () => {
                 { id: 'student', label: 'Student' },
                 { id: 'teacher', label: 'Teacher' },
                 { id: 'admin', label: 'Admin' },
+                { id: 'doctor', label: 'Doctor' },
             ],
         },
     ];

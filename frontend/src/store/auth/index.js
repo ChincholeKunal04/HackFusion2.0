@@ -107,6 +107,31 @@ export const logoutAdmin = createAsyncThunk(
     }
 );
 
+export const loginDoctor = createAsyncThunk(
+    "/auth/loginDoctor",
+    async (formData) => {
+        const response = await axios.post(
+            "http://localhost:8000/api/auth/doctor-login",
+            formData,
+            { withCredentials: true }
+        );
+        return response.data;
+    }
+);
+
+export const logoutDoctor = createAsyncThunk(
+    "/auth/logoutDoctor",
+    async () => {
+        const response = await axios.post(
+            "http://localhost:8000/api/auth/doctor-logout",
+            {},
+            { withCredentials: true }
+        );
+        // Directly dispatch the clearUser action here instead
+        return response.data;
+    }
+);
+
 // Role-Specific CheckAuth
 export const checkAuth = createAsyncThunk(
     "/auth/checkAuth",
@@ -189,7 +214,7 @@ const authSlice = createSlice({
                 state.isAuthenticated = action.payload.success;
             })
             .addCase(loginStudent.fulfilled, (state, action) => {
-                console.log("LoginStudent Payload:", action.payload);
+                console.log("Login Student Payload:", action.payload);
             
                 state.isLoading = false;
                 
@@ -213,6 +238,7 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.user = null;
                 state.isAuthenticated = false;
+                sessionStorage.removeItem("user");
             })
 
             // Teacher Authentication
@@ -221,15 +247,38 @@ const authSlice = createSlice({
                 state.user = action.payload.success ? action.payload.user : null;
                 state.isAuthenticated = action.payload.success;
             })
+            .addCase(loginTeacher.pending, (state) => {
+                state.isLoading = true;
+            })
             .addCase(loginTeacher.fulfilled, (state, action) => {
+                if (!action || !action.payload) {
+                    console.error("Invalid action payload:", action);
+                    return;
+                }
+
                 state.isLoading = false;
-                state.user = action.payload.success ? action.payload.user : null;
-                state.isAuthenticated = action.payload.success;
+                
+                if (action.payload.success && action.payload.user) {
+                    state.isAuthenticated = true;
+                    state.user = action.payload.user;
+                    sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+                } else {
+                    state.isAuthenticated = false;
+                    state.user = null;
+                    sessionStorage.removeItem("user");
+                }
+            })
+            .addCase(loginTeacher.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = false;
+                state.user = null;
+                console.error("Error in login:", action.error);
             })
             .addCase(logoutTeacher.fulfilled, (state) => {
                 state.isLoading = false;
                 state.user = null;
                 state.isAuthenticated = false;
+                sessionStorage.removeItem("user");
             })
 
             // Admin Authentication
@@ -261,6 +310,39 @@ const authSlice = createSlice({
                 console.error("Error in login:", action.error);
             })
             .addCase(logoutAdmin.fulfilled, (state) => {
+                state.isLoading = false;
+                state.user = null;
+                state.isAuthenticated = false;
+                sessionStorage.removeItem("user");
+            })
+            .addCase(loginDoctor.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(loginDoctor.fulfilled, (state, action) => {
+                if (!action || !action.payload) {
+                    console.error("Invalid action payload:", action);
+                    return;
+                }
+
+                state.isLoading = false;
+                
+                if (action.payload.success && action.payload.user) {
+                    state.isAuthenticated = true;
+                    state.user = action.payload.user;
+                    sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+                } else {
+                    state.isAuthenticated = false;
+                    state.user = null;
+                    sessionStorage.removeItem("user");
+                }
+            })
+            .addCase(loginDoctor.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = false;
+                state.user = null;
+                console.error("Error in login:", action.error);
+            })
+            .addCase(logoutDoctor.fulfilled, (state) => {
                 state.isLoading = false;
                 state.user = null;
                 state.isAuthenticated = false;
