@@ -15,6 +15,8 @@ import StudentDashboard from "./pages/student/DashBoard";
 import DoctorDashboard from "./pages/doctor/Dashboard";
 import NotFound from "./pages/unauth/Index";
 import { useEffect } from "react";
+import { Candidatelist, Election, Registerstudent, Results, Voting } from "./pages/student/election";
+import Electionui from "./components/student/Election/electionui";
 
 function App() {
     const { isAuthenticated, user, isLoading } = useSelector((state) => state.auth);
@@ -37,7 +39,7 @@ function App() {
     }
 
     return (
-        // <Router>
+        //  <Router>
             <Routes>
                 {/* Public Routes */}
                 <Route
@@ -75,17 +77,23 @@ function App() {
                     <Route path="dashboard" element={<TeacherDashboard />} />
                 </Route>
 
-                <Route
-                    path="/student/*"
-                    element={
-                        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-                            <StudentLayout />
-                        </CheckAuth>
-                    }
-                >
-                    <Route path="dashboard" element={<StudentDashboard />} />
-                </Route>
+                <Route path="/student/*" element={<StudentLayout />}>
+                {/* Student Dashboard Route */}
+                <Route path="dashboard" element={<StudentDashboard />} />
 
+                {/* Election Section with Nested Routes */}
+                <Route path="election/*" element={<Election/>}/>
+                    <Route path="candidatelist" element={<Candidatelist />} />
+                    <Route path="registercandidate" element={<Registerstudent />} />
+                    <Route path="result" element={<Results />} />
+                    <Route path="votesystem" element={<Voting />} />
+                    <Route path="electionui"
+                    element={
+                        <Electionui/>
+                    }/>
+               
+            </Route>
+                
                 <Route
                     path="/doctor/*"
                     element={
@@ -100,7 +108,7 @@ function App() {
                 {/* Fallback Route */}
                 <Route path="*" element={<NotFound />} />
             </Routes>
-        // {/* </Router> */}
+        //  </Router> 
     );
 }
 
