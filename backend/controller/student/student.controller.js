@@ -2,6 +2,7 @@ import Student from "../../models/Student.model.js";
 import HealthReport from "../../models/HealthReport.model.js"
 import LeaveReport from "../../models/LeaveReport.model.js"
 import transporter from "../../config/emailconfig.js";
+import AnonymousComplaint from '../../models/AnonymousComplaint.model.js'
 
 const getStudentProfile = async (req, res) => {
     try {
@@ -226,4 +227,41 @@ const fetchAllLeaveReports = async (req, res) => {
     }
 };
 
-export { getStudentProfile, updateStudentProfile, reportSickness, reportLeave, fetchAllHealthReports, fetchHealthReportStatus, fetchAllLeaveReports } 
+const submitComplaint = async (req, res) => {
+    try {
+        const { complaintText } = req.body;
+        const studentId = req.user.userId;
+
+        // Check for vulgar words
+        // const vulgarWords = ["badword1"];
+        // const containsVulgar = vulgarWords.some(word => complaintText.includes(word));
+
+        // if (containsVulgar) {
+        //     return res.status(400).json({
+        //         success: false,
+        //         message: "Complaint contains inappropriate content."
+        //     });
+        // }
+
+        const complaint = new AnonymousComplaint({
+            student: studentId,
+            complaintText
+        });
+
+        await complaint.save();
+
+        res.status(201).json({
+            success: true,
+            message: "Complaint submitted successfully and is under review."
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Server error while submitting complaint."
+        });
+    }
+}
+
+export { getStudentProfile, updateStudentProfile, reportSickness, reportLeave, fetchAllHealthReports, fetchHealthReportStatus, fetchAllLeaveReports, submitComplaint } 
