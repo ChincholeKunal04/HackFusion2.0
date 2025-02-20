@@ -103,11 +103,20 @@ const reportLeave = async (req, res) => {
     try {
 
         const studentId = req.user.userId;
-        const { reason } = req.body;
+        const { reason, startDate, endDate } = req.body;
+
+        if (new Date(endDate) < new Date(startDate)) {
+            return res.status(400).json({
+                success: false,
+                message: "End date must be after or equal to the start date."
+            });
+        }
 
         const newLeave = new LeaveReport({
             student: studentId,
-            reason
+            reason,
+            startDate,
+            endDate
         });
         await newLeave.save();
 
