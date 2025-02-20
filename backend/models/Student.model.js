@@ -42,36 +42,6 @@ const studentSchema = new Schema({
         type: Boolean,
         default: false
     },
-    votedCandidates: [
-        {
-          electionId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Election"
-          },
-          candidateId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Candidate"
-          }
-        }
-    ],
-    isCandidate: {
-        type: Boolean,
-        default: false
-    },
-  
-    manifesto: {
-        type: String,
-        required: function () {
-          return this.isCandidate;
-        }
-    },
-  
-    position: {
-        type: String,
-        required: function () {
-          return this.isCandidate;
-        }
-    },
     parentEmail: {
         type: String,
         required: true,
@@ -86,63 +56,6 @@ const studentSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Teacher"
     },
-    bookings: [
-        {
-          facilityId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Facility"
-          },
-          date: Date,
-          status: {
-            type: String,
-            enum: ["pending", "approved", "rejected"],
-            default: "pending"
-          }
-        }
-    ],
-    applications: [
-        {
-          applicationId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Application"
-          },
-          status: {
-            type: String,
-            enum: ["submitted", "approved", "rejected", "escalated"],
-            default: "submitted"
-          }
-        }
-    ],
-    complaints: [
-        {
-          complaintId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Complaint"
-          },
-          isAnonymous: {
-            type: Boolean,
-            default: true
-          },
-          status: {
-            type: String,
-            enum: ["pending", "reviewed", "resolved"],
-            default: "pending"
-          }
-        }
-    ],
-    // budgetRequests: [
-    //     {
-    //       budgetId: {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: "Budget"
-    //       },
-    //       status: {
-    //         type: String,
-    //         enum: ["pending", "approved", "rejected"],
-    //         default: "pending"
-    //       }
-    //     }
-    // ]
 },
 {timestamps: true}
 );
