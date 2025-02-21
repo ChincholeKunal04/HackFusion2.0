@@ -2,6 +2,7 @@ import Student from "../../models/Student.model.js";
 import Teacher from "../../models/Teacher.model.js";
 import Admin from "../../models/Admin.model.js"
 import Doctor from "../../models/Doctor.model.js";
+import AnonymousComplaint from "../../models/AnonymousComplaint.model.js";
 
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
@@ -263,4 +264,89 @@ const addDoctor = async (req, res) => {
     }
 }
 
-export { verifyStudent, verifyTeacher, fetchUnverifiedStudents, fetchUnverifiedTeachers, getAdminProfile, addAdmin, addDoctor };
+const fetchPendingComplaints = async (req, res) => {
+    try {
+        const pendingComplaints = await AnonymousComplaint.find({ status: "pending" })
+            .populate("student", "name registrationNumber");
+
+        res.status(200).json({
+            success: true,
+            message: "All pending complaints retrieved successfully.",
+            data: pendingComplaints
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Server error while fetching pending complaints."
+        });
+    }
+};
+
+const moderateComplaint = async (req, res) => {
+    try {
+        const { complaintId } = req.params;
+        const { status, moderationRemarks } = req.body;
+
+        const complaint = await AnonymousComplaint.findById(complaintId);
+        if (!complaint) {
+            return res.status(404).json({ success: false, message: "Complaint not found." });
+        }
+
+        complaint.status = status;
+        complaint.moderationRemarks = moderationRemarks;
+        await complaint.save();
+
+        res.status(200).json({
+            success: true,
+            message: `Complaint ${status} successfully.`,
+            data: complaint
+        });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Server error while moderating complaint."
+        });
+    }
+}
+
+const rejectComplaint = async (req, res) => {
+    try {
+        const { complaintId } = req.params;
+        const { moderationRemarks } = req.body;
+
+        const complaint = await AnonymousComplaint.findById(complaintId);
+        if (!complaint) {
+            return res.status(404).json({ success: false, message: "Complaint not found." });
+        }
+
+        if (complaint.status !== "pending") {
+            return res.status(400).json({
+                success: false,
+                message: "Only pending complaints can be rejected."
+            });
+        }
+
+        complaint.status = "rejected";
+        complaint.moderationRemarks = moderationRemarks;
+        await complaint.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Complaint rejected successfully.",
+            data: complaint
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Server error while rejecting complaint."
+        });
+    }
+};
+
+export { verifyStudent, verifyTeacher, fetchUnverifiedStudents, fetchUnverifiedTeachers, getAdminProfile, addAdmin, addDoctor, moderateComplaint, rejectComplaint, fetchPendingComplaints };

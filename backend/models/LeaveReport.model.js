@@ -10,9 +10,19 @@ const leaveReportSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  date: {
+  startDate: {
     type: Date,
-    default: Date.now
+    required: true
+  },
+  endDate: {
+    type: Date,
+    required: true,
+    validate: {
+      validator: function (value) {
+        return value >= this.startDate; // Ensure endDate is not before startDate
+      },
+      message: "End date must be after or equal to the start date."
+    }
   },
   isNotified: {
     type: Boolean,
