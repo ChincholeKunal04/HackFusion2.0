@@ -5,8 +5,8 @@ import cloudinary from "../config/cloudinaryConfig.js";
 const storage = new CloudinaryStorage({
     cloudinary,
     params : {
-        folder: "cheating-reports",
-        format: async (req, file) => "jpeg", 
+        folder: "applications",
+        format: async (req, file) => file.mimetype.split("/")[1], 
         public_id: (req, file) => file.originalname.split(".")[0] + "-" + Date.now()
     }
 });

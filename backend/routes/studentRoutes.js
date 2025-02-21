@@ -3,7 +3,8 @@ import { getStudentProfile, updateStudentProfile, reportSickness, reportLeave, f
 import { fetchAllCheatingReports, fetchCheatingReportById } from '../controller/cheating/cheating.controller.js';
 import { verifyStudent } from '../middleware/verifyStudent.middleware.js';
 import { fetchAllComplaints, fetchSpecificComplaint } from '../controller/anonymousComplaint/anonymousComplaint.controller.js';
-
+import { submitApplication, fetchSpecificApplication, fetchAllApplications } from '../controller/application/application.controller.js';
+import upload from '../middleware/imageUpload.middleware.js';
 
 const studentRouter = express.Router();
 
@@ -23,5 +24,9 @@ studentRouter.get("/cheating-reports/:reportId", verifyStudent, fetchCheatingRep
 studentRouter.post("/complaint", verifyStudent, submitComplaint);
 studentRouter.get("/complaints", verifyStudent, fetchAllComplaints);
 studentRouter.get("/complaints/:complaintId", verifyStudent, fetchSpecificComplaint);
+
+studentRouter.post("/apply-application", verifyStudent, upload.array("files", 5), submitApplication);
+studentRouter.get("/applications", verifyStudent, fetchAllApplications);
+studentRouter.get("/application/:applicationId", verifyStudent, fetchSpecificApplication)
 
 export default studentRouter;
