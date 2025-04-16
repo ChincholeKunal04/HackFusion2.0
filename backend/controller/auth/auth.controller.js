@@ -55,12 +55,9 @@ const registerStudent = async (req, res) => {
 
 const loginStudent = async (req, res) => {
     try {
-
         const { email, password } = req.body;
-        // console.log("Login Request Body:", req.body);
 
         const student = await Student.findOne({ email });
-        // console.log("Student Found:", student);
 
         if (!student) {
             return res.status(400).json({ 
@@ -69,9 +66,7 @@ const loginStudent = async (req, res) => {
             });
         }
 
-        // console.log("Student Verification Status:", student.isVerified);
-
-        if(!student.isVerified) {
+        if (!student.isVerified) {
             return res.status(403).json({ 
                 success: false,
                 message: "Account is not verified by admin."
@@ -79,7 +74,6 @@ const loginStudent = async (req, res) => {
         }
 
         const isMatch = await bcrypt.compare(password, student.password);
-        // console.log("Password Match:", isMatch);
 
         if (!isMatch) {
             return res.status(400).json({ 
@@ -89,28 +83,30 @@ const loginStudent = async (req, res) => {
         }
 
         const token = jwt.sign({
-            userId : student._id,
-            role : student.role
-        }, process.env.JWT_SECRET, { expiresIn: "1h" });
+            userId: student._id,
+            role: student.role
+        }, process.env.JWT_SECRET, { expiresIn: "10h" });
 
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
             sameSite: "none"
-        }); 
+        });
 
         const studentData = {
             _id: student._id,
             email: student.email,
-            role: student.role
+            role: student.role,
+            name: student.name,
         };
-        
+
         res.status(200).json({ 
             success: true,
             message: "Student logged in successfully.",
-            user : studentData
+            user: studentData,
+            token: token 
         });
-        
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ 
@@ -118,7 +114,7 @@ const loginStudent = async (req, res) => {
             message: "Server error during login."
         });
     }
-}
+};
 
 const logoutStudent = async (req, res) => {
     res.clearCookie("token", {
@@ -137,47 +133,47 @@ const logoutStudent = async (req, res) => {
 
 const loginAdmin = async (req, res) => {
     try {
-
         const { email, password } = req.body;
 
         const admin = await Admin.findOne({ email });
         if (!admin) {
             return res.status(400).json({ 
                 success: false, 
-                message: "Invalid email or password. 2" 
+                message: "Invalid email or password." 
             });
         }
-        
-    
+
         const isMatch = await bcrypt.compare(password, admin.password);
         if (!isMatch) {
             return res.status(400).json({ 
                 success: false, 
-                message: "Invalid email or password 1 ." 
+                message: "Invalid email or password." 
             });
         }
 
         const token = jwt.sign({
-            userId : admin._id,
-            role : admin.role
-        }, process.env.JWT_SECRET, { expiresIn: "1h" } )
+            userId: admin._id,
+            role: admin.role
+        }, process.env.JWT_SECRET, { expiresIn: "10h" });
 
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
             sameSite: "none"
-        }); 
+        });
 
         const adminData = {
             _id: admin._id,
             email: admin.email,
-            role: admin.role
+            role: admin.role,
+            name: admin.name
         };
 
         res.status(200).json({
             success: true,
             message: "Admin login successful.",
-            user : adminData
+            user: adminData,
+            token: token 
         });
 
     } catch (error) {
@@ -187,7 +183,7 @@ const loginAdmin = async (req, res) => {
             message: "Server error during admin login.",
         });
     }
-}
+};
 
 const logoutAdmin = async (req, res) => {
     res.clearCookie("token", {
@@ -243,7 +239,6 @@ const registerTeacher = async (req, res) => {
 
 const loginTeacher = async (req, res) => {
     try {
-
         const { email, password } = req.body;
 
         const teacher = await Teacher.findOne({ email });
@@ -270,36 +265,38 @@ const loginTeacher = async (req, res) => {
         }
 
         const token = jwt.sign({
-            userId : teacher._id,
-            role : teacher.role
-        }, process.env.JWT_SECRET, { expiresIn: "1h" });
+            userId: teacher._id,
+            role: teacher.role
+        }, process.env.JWT_SECRET, { expiresIn: "10h" });
 
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
             sameSite: "none"
-        }); 
+        });
 
         const teacherData = {
-            _id : teacher._id,
-            email : teacher.email,
-            role : teacher.role
-        }
+            _id: teacher._id,
+            email: teacher.email,
+            role: teacher.role,
+            name: teacher.name
+        };
 
         res.status(200).json({
             success: true,
             message: "Teacher login successful.",
-            user : teacherData
+            user: teacherData,
+            token: token 
         });
-        
+
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({
             success: false,
             message: "Server error during login."
         });
     }
-}
+};
 
 const logoutTeacher = async (req, res) => {
     res.clearCookie("token", {
@@ -345,18 +342,22 @@ const loginDoctor = async (req, res) => {
         const token = jwt.sign({
             userId : doctor._id,
             role : doctor.role
-        }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        }, process.env.JWT_SECRET, { expiresIn: "5d" });
         
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "none"
+            sameSite: "lax",
+            // domain: "localhost", 
+            // path: "/",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         }); 
 
         const doctorData = {
             _id : doctor._id,
             email : doctor.email,
-            role : doctor.role
+            role : doctor.role,
+            name : doctor.name
         }
 
         res.status(200).json({
@@ -381,7 +382,9 @@ const logoutDoctor = async (req, res) => {
         res.clearCookie("token", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",  
-            sameSite: "none"
+            sameSite: "none",
+            domain: "localhost",
+            path: "/",
         });
 
         res.status(200).json({

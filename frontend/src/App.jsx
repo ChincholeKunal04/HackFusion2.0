@@ -31,7 +31,7 @@ function App() {
         }
     }, [isAuthenticated, dispatch]);
 
-    console.log("isAuthenticated:", isAuthenticated);
+    // console.log("isAuthenticated:", isAuthenticated);
     console.log("user:", user ? user : "No user");
 
     if (isLoading) {

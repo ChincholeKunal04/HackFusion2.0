@@ -4,7 +4,12 @@ import Doctor from "../models/Doctor.model.js";
 const verifyDoctor = async (req, res, next) => {
     try {
       
+        // const authHeader = req.headers['authorization'];
+        // console.log("Authorization Header:", authHeader);
+
         const token = req.headers.authorization?.split(" ")[1];
+        // console.log("Extracted Token:", token);
+
         if (!token) {
             return res.status(401).json({ 
             success: false,
@@ -14,6 +19,7 @@ const verifyDoctor = async (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
+        // console.log(decoded)
     
         const doctor = await Doctor.findById(req.user.userId);
         if (!doctor || doctor.role !== "doctor" || !doctor.isVerified) {

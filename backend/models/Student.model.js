@@ -42,14 +42,22 @@ const studentSchema = new Schema({
         type: Boolean,
         default: false
     },
+    otp: {
+        type: String,
+        default: null,
+    },
+    otpExpires: {
+        type: Date,
+        default: null,
+    },
     parentEmail: {
         type: String,
-        required: true,
+        // required: true,
         match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     },
     parentPhone: {
         type: String,
-        required: true,
+        // required: true,
         match: /^[0-9]{10}$/
     },
     classCoordinator: {

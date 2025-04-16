@@ -21,7 +21,15 @@ const revealIdentityVote = async (req, res) => {
         if (!complaint) {
             return res.status(404).json({ 
                 success: false, 
-                message: "Complaint not found." });
+                message: "Complaint not found." 
+            });
+        }
+
+        if (!complaint.type) {
+            return res.status(400).json({
+                success: false,
+                message: "Complaint type is required."
+            });
         }
 
         const alreadyVoted = complaint.boardApprovals.some(vote => 
@@ -67,13 +75,13 @@ const revealIdentityVote = async (req, res) => {
         });
         
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({
             success: false,
             message: "Server error while voting for identity reveal."
         });
     }
-}
+};
 
 const fetchSpecificComplaint = async (req, res) => {
     try {
@@ -133,9 +141,10 @@ const fetchAllComplaints = async (req, res) => {
             createdAt: complaint.createdAt,
             updatedAt: complaint.updatedAt,
             isAnonymous: !complaint.isIdentityRevealed,
-            student: complaint.isIdentityRevealed
-                ? { name: complaint.student.name, registrationNumber: complaint.student.registrationNumber }
-                : "Anonymous"
+            student: {
+                name: complaint.isIdentityRevealed ? complaint.student.name : "Anonymous",
+                registrationNumber: complaint.isIdentityRevealed ? complaint.student.registrationNumber : "N/A"
+            }
         }));
 
         res.status(200).json({

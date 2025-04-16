@@ -6,6 +6,9 @@ const anonymousComplaintSchema = new Schema({
         ref: "Student",
         required: true
     },
+    type: {
+        type: String,
+    },
     complaintText: {
         type: String,
         required: true
@@ -28,7 +31,7 @@ const anonymousComplaintSchema = new Schema({
             member: { 
                 type: mongoose.Schema.Types.ObjectId, 
                 refPath: "boardMemberType",
-                required : true
+                required: true
             },
             boardMemberType: { 
                 type: String, 
@@ -36,7 +39,7 @@ const anonymousComplaintSchema = new Schema({
             },
             approved: { 
                 type: Boolean,
-                required : true
+                required: true
             }
         }
     ],

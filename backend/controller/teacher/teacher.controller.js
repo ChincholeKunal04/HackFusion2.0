@@ -12,7 +12,7 @@ const fetchAllLeaveReports = async (req, res) => {
         const studentIds = students.map(student => student._id);
 
         const leaveReports = await LeaveReport.find({ student: { $in: studentIds } })
-            .populate("student", "name email registrationNumber")
+            .populate("student", "name reason registrationNumber")
             .sort({ createdAt: -1 });
 
         res.status(200).json({
@@ -59,7 +59,7 @@ const fetchAllApprovedHealthReports = async (req, res) => {
 
 const reportCheating = async (req, res) => {
     try {
-        const { registrationNumber, reason, complaint } = req.body;
+        const { registrationNumber, reason, course } = req.body;
 
         if (!req.file) {
             return res.status(400).json({
@@ -85,7 +85,7 @@ const reportCheating = async (req, res) => {
             registrationNumber: student.registrationNumber,
             reason,
             proof: proofImageUrl,
-            complaint
+            course
         });
 
         await newCheatingRecord.save();
@@ -102,7 +102,7 @@ const reportCheating = async (req, res) => {
             success: false,
             message: "Server error while reporting cheating."
         });
-    }
+    } 
 }
 
 export { fetchAllLeaveReports, fetchAllApprovedHealthReports, reportCheating }

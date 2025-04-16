@@ -16,13 +16,13 @@ const cheatingRecordSchema = new Schema({
     },
     reason: {
       type: String,
-      required: true
+      required: false
     },
     proof: {
       type: String,
       required: true
     },
-    complaint: {
+    course: {
       type: String,
       required: true
     }
