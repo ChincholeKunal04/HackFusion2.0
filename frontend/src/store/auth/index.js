@@ -102,11 +102,11 @@ export const logoutAdmin = createAsyncThunk(
             {},
             { withCredentials: true }
         );
-        // Directly dispatch the clearUser action here instead
         return response.data;
     }
 );
 
+// Doctor Authentication
 export const loginDoctor = createAsyncThunk(
     "/auth/loginDoctor",
     async (formData) => {
@@ -127,7 +127,6 @@ export const logoutDoctor = createAsyncThunk(
             {},
             { withCredentials: true }
         );
-        // Directly dispatch the clearUser action here instead
         return response.data;
     }
 );
@@ -188,6 +187,7 @@ const authSlice = createSlice({
             state.user = null;
             state.isAuthenticated = false;
             sessionStorage.removeItem("user");
+            sessionStorage.removeItem("token");
         }
     },
     extraReducers: (builder) => {
@@ -214,24 +214,26 @@ const authSlice = createSlice({
                 state.isAuthenticated = action.payload.success;
             })
             .addCase(loginStudent.fulfilled, (state, action) => {
-                console.log("Login Student Payload:", action.payload);
-            
                 state.isLoading = false;
                 
                 if (action.payload.success && action.payload.user) {
                     state.isAuthenticated = true;
                     state.user = action.payload.user;
                     sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+                    sessionStorage.setItem("token", action.payload.token); // Store token
                 } else {
                     state.isAuthenticated = false;
                     state.user = null;
                     sessionStorage.removeItem("user");
+                    sessionStorage.removeItem("token");
                 }
             })
             .addCase(loginStudent.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
+                sessionStorage.removeItem("user");
+                sessionStorage.removeItem("token");
                 console.error("Error in login:", action.error);
             })
             .addCase(logoutStudent.fulfilled, (state) => {
@@ -239,6 +241,7 @@ const authSlice = createSlice({
                 state.user = null;
                 state.isAuthenticated = false;
                 sessionStorage.removeItem("user");
+                sessionStorage.removeItem("token");
             })
 
             // Teacher Authentication
@@ -251,27 +254,26 @@ const authSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(loginTeacher.fulfilled, (state, action) => {
-                if (!action || !action.payload) {
-                    console.error("Invalid action payload:", action);
-                    return;
-                }
-
                 state.isLoading = false;
                 
                 if (action.payload.success && action.payload.user) {
                     state.isAuthenticated = true;
                     state.user = action.payload.user;
                     sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+                    sessionStorage.setItem("token", action.payload.token); // Store token
                 } else {
                     state.isAuthenticated = false;
                     state.user = null;
                     sessionStorage.removeItem("user");
+                    sessionStorage.removeItem("token");
                 }
             })
             .addCase(loginTeacher.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
+                sessionStorage.removeItem("user");
+                sessionStorage.removeItem("token");
                 console.error("Error in login:", action.error);
             })
             .addCase(logoutTeacher.fulfilled, (state) => {
@@ -279,6 +281,7 @@ const authSlice = createSlice({
                 state.user = null;
                 state.isAuthenticated = false;
                 sessionStorage.removeItem("user");
+                sessionStorage.removeItem("token");
             })
 
             // Admin Authentication
@@ -286,27 +289,26 @@ const authSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(loginAdmin.fulfilled, (state, action) => {
-                if (!action || !action.payload) {
-                    console.error("Invalid action payload:", action);
-                    return;
-                }
-
                 state.isLoading = false;
                 
                 if (action.payload.success && action.payload.user) {
                     state.isAuthenticated = true;
                     state.user = action.payload.user;
                     sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+                    sessionStorage.setItem("token", action.payload.token); // Store token
                 } else {
                     state.isAuthenticated = false;
                     state.user = null;
                     sessionStorage.removeItem("user");
+                    sessionStorage.removeItem("token");
                 }
             })
             .addCase(loginAdmin.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
+                sessionStorage.removeItem("user");
+                sessionStorage.removeItem("token");
                 console.error("Error in login:", action.error);
             })
             .addCase(logoutAdmin.fulfilled, (state) => {
@@ -314,32 +316,34 @@ const authSlice = createSlice({
                 state.user = null;
                 state.isAuthenticated = false;
                 sessionStorage.removeItem("user");
+                sessionStorage.removeItem("token");
             })
+
+            // Doctor Authentication
             .addCase(loginDoctor.pending, (state) => {
                 state.isLoading = true;
             })
             .addCase(loginDoctor.fulfilled, (state, action) => {
-                if (!action || !action.payload) {
-                    console.error("Invalid action payload:", action);
-                    return;
-                }
-
                 state.isLoading = false;
                 
                 if (action.payload.success && action.payload.user) {
                     state.isAuthenticated = true;
                     state.user = action.payload.user;
                     sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+                    sessionStorage.setItem("token", action.payload.token); // Store token
                 } else {
                     state.isAuthenticated = false;
                     state.user = null;
                     sessionStorage.removeItem("user");
+                    sessionStorage.removeItem("token");
                 }
             })
             .addCase(loginDoctor.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
+                sessionStorage.removeItem("user");
+                sessionStorage.removeItem("token");
                 console.error("Error in login:", action.error);
             })
             .addCase(logoutDoctor.fulfilled, (state) => {
@@ -347,6 +351,7 @@ const authSlice = createSlice({
                 state.user = null;
                 state.isAuthenticated = false;
                 sessionStorage.removeItem("user");
+                sessionStorage.removeItem("token");
             });
     },
 });
