@@ -4,7 +4,7 @@ import { verifyTeacher } from "../middleware/verifyTeacher.middleware.js";
 import { fetchAllCheatingReports, fetchCheatingReportById } from "../controller/cheating/cheating.controller.js";
 import { revealIdentityVote, fetchAllComplaints, fetchSpecificComplaint } from "../controller/anonymousComplaint/anonymousComplaint.controller.js";
 import { fetchAllApplications, fetchSpecificApplication, submitApplication } from "../controller/application/application.controller.js";
-import { bookFacility, fetchFacilityApplications, fetchFacilityApplicationById } from "../controller/facility/facility.controller.js";
+// import { bookFacility, fetchFacilityApplications, fetchFacilityApplicationById } from "../controller/facility/facility.controller.js";
 import upload from "../middleware/imageUpload.middleware.js";
 
 const teacherRouter = express.Router();
@@ -27,7 +27,7 @@ teacherRouter.get("/applications", verifyTeacher, fetchAllApplications);
 teacherRouter.get("/application/:applicationId", verifyTeacher, fetchSpecificApplication)
 
 // teacherRouter.post("/book-facility", verifyTeacher, bookFacility);
-teacherRouter.get("/facility-applications", verifyTeacher, fetchFacilityApplications);
-teacherRouter.get("/facility-application/:applicationId", verifyTeacher, fetchFacilityApplicationById)
+// teacherRouter.get("/facility-applications", verifyTeacher, fetchFacilityApplications);
+// teacherRouter.get("/facility-application/:applicationId", verifyTeacher, fetchFacilityApplicationById)
 
 export default teacherRouter;

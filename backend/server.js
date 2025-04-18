@@ -9,6 +9,7 @@ import authRouter from './routes/authRoutes.js';
 import studentRouter from './routes/studentRoutes.js';
 import doctorRouter from './routes/doctorRoutes.js';
 import teacherRouter from './routes/teacherRoutes.js';
+import facilityrouter from './routes/facilityroutes.js';
 
 dotenv.config()
 
@@ -46,7 +47,7 @@ app.use("/api/admin", adminRouter);
 app.use("/api/student", studentRouter);
 app.use("/api/doctor", doctorRouter);
 app.use("/api/teacher", teacherRouter);
-
+app.use("/api/facility",facilityrouter);
 app.get("/api/test", (req, res) => {
     res.status(200).json({ message: "API is working!" });
 });
@@ -55,5 +56,5 @@ app.use((req, res, next) => {
     res.status(404).json({ message: "Route not found" });
 });
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`)
+app.listen(PORT, () => console.log(`Server is running on port ${PORT} `)
 )
