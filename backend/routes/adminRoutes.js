@@ -3,7 +3,7 @@ import { verifyStudent, verifyTeacher, fetchUnverifiedStudents, fetchUnverifiedT
 import { verifyAdmin } from '../middleware/verifyAdmin.middleware.js';
 import { revealIdentityVote } from '../controller/anonymousComplaint/anonymousComplaint.controller.js';
 import { reviewApplication, fetchUnreviewedApplications, fetchSpecificApplication, fetchAllApplications } from '../controller/application/application.controller.js';
-import { reviewFacilityApplication, fetchFacilityApplications, fetchFacilityApplicationById } from '../controller/facility/facility.controller.js';
+// import { reviewFacilityApplication, fetchFacilityApplications, fetchFacilityApplicationById } from '../controller/facility/facility.controller.js';
 import { createElection, verifyCandidate, fetchAllElections, fetchAllCandidates, getCandidatesForElection, fetchAllElectionResults, calculateElectionResult } from '../controller/election/election.controller.js';
 const adminRouter = express.Router();
 
@@ -29,9 +29,9 @@ adminRouter.get("/applications", verifyAdmin, fetchUnreviewedApplications);
 adminRouter.get("/application/:applicationId", verifyAdmin, fetchSpecificApplication);
 adminRouter.get("/all-applications", verifyAdmin, fetchAllApplications);
 
-adminRouter.put('/review-facility/:applicationId', verifyAdmin, reviewFacilityApplication);
-adminRouter.get("/facility-applications", verifyAdmin, fetchFacilityApplications);
-adminRouter.get("/facility-application/:applicationId", verifyAdmin, fetchFacilityApplicationById)
+// adminRouter.put('/review-facility/:applicationId', verifyAdmin, reviewFacilityApplication);
+// adminRouter.get("/facility-applications", verifyAdmin, fetchFacilityApplications);
+// adminRouter.get("/facility-application/:applicationId", verifyAdmin, fetchFacilityApplicationById)
 
 adminRouter.post("/create-election", verifyAdmin, createElection);
 adminRouter.put("/verify-candidate", verifyAdmin, verifyCandidate);
