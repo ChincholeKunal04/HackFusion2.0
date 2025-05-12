@@ -7,12 +7,14 @@ const initialState = {
     user: null,
 };
 
+const backendURL = import.meta.env.VITE_BACKEND_URI
+
 // Student Authentication
 export const registerStudent = createAsyncThunk(
     "/auth/registerStudent",
     async (formData) => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/register",
+            `${backendURL}/api/auth/register`,
             formData,
             { withCredentials: true }
         );
@@ -24,7 +26,7 @@ export const loginStudent = createAsyncThunk(
     "/auth/loginStudent",
     async (formData) => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/login",
+            `${backendURL}/api/auth/login`,
             formData,
             { withCredentials: true }
         );
@@ -36,7 +38,7 @@ export const logoutStudent = createAsyncThunk(
     "/auth/logoutStudent",
     async () => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/logout",
+            `${backendURL}/api/auth/logout`,
             {},
             { withCredentials: true }
         );
@@ -49,7 +51,7 @@ export const registerTeacher = createAsyncThunk(
     "/auth/registerTeacher",
     async (formData) => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/teacher-register",
+            `${backendURL}/api/auth/teacher-register`,
             formData,
             { withCredentials: true }
         );
@@ -61,7 +63,7 @@ export const loginTeacher = createAsyncThunk(
     "/auth/loginTeacher",
     async (formData) => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/teacher-login",
+            `${backendURL}/api/auth/teacher-login`,
             formData,
             { withCredentials: true }
         );
@@ -73,7 +75,7 @@ export const logoutTeacher = createAsyncThunk(
     "/auth/logoutTeacher",
     async () => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/teacher-logout",
+            `${backendURL}/api/auth/teacher-logout`,
             {},
             { withCredentials: true }
         );
@@ -86,7 +88,7 @@ export const loginAdmin = createAsyncThunk(
     "/auth/loginAdmin",
     async (formData) => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/admin-login",
+            `${backendURL}/api/auth/admin-login`,
             formData,
             { withCredentials: true }
         );
@@ -98,7 +100,7 @@ export const logoutAdmin = createAsyncThunk(
     "/auth/logoutAdmin",
     async () => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/admin-logout",
+            `${backendURL}/api/auth/admin-logout`,
             {},
             { withCredentials: true }
         );
@@ -111,7 +113,7 @@ export const loginDoctor = createAsyncThunk(
     "/auth/loginDoctor",
     async (formData) => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/doctor-login",
+            `${backendURL}/api/auth/doctor-login`,
             formData,
             { withCredentials: true }
         );
@@ -123,7 +125,7 @@ export const logoutDoctor = createAsyncThunk(
     "/auth/logoutDoctor",
     async () => {
         const response = await axios.post(
-            "http://localhost:8000/api/auth/doctor-logout",
+            `${backendURL}/api/auth/doctor-logout`,
             {},
             { withCredentials: true }
         );
@@ -141,13 +143,13 @@ export const checkAuth = createAsyncThunk(
         let endpoint = "";
         switch (role) {
             case "student":
-                endpoint = "http://localhost:8000/api/auth/check-auth-student";
+                endpoint = `${backendURL}/api/auth/check-auth-student`;
                 break;
             case "teacher":
-                endpoint = "http://localhost:8000/api/auth/check-auth-teacher";
+                endpoint = `${backendURL}/api/auth/check-auth-teacher`;
                 break;
             case "admin":
-                endpoint = "http://localhost:8000/api/auth/check-auth-admin";
+                endpoint = `${backendURL}/api/auth/check-auth-admin`;
                 break;
             default:
                 throw new Error("Invalid role");

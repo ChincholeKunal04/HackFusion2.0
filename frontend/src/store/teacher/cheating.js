@@ -7,6 +7,8 @@ const initialState = {
     error: null,
 };
 
+const backendURL = import.meta.env.VITE_BACKEND_URI
+
 export const reportCheating = createAsyncThunk(
     "teacher/reportCheating",
     async (formData, { rejectWithValue }) => {
@@ -17,7 +19,7 @@ export const reportCheating = createAsyncThunk(
             }
 
             const response = await axios.post(
-                "http://localhost:8000/api/teacher/report-cheating",
+                `${backendURL}/api/teacher/report-cheating`,
                 formData,
                 {
                     headers: {
@@ -45,7 +47,7 @@ export const fetchAllCheatingReports = createAsyncThunk(
             }
 
             const response = await axios.get(
-                "http://localhost:8000/api/teacher/cheating-reports",
+                `${backendURL}/api/teacher/cheating-reports`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                     withCredentials: true,

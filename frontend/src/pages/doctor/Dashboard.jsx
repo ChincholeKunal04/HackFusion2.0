@@ -112,45 +112,45 @@ function App() {
 
                     {/* Report Details Modal */}
                     {selectedReport && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-                    <div className="p-6 border-b">
-                        <h2 className="text-2xl font-bold text-gray-900">Student Details</h2>
-                    </div>
-                    <div className="p-6 space-y-4">
-                        <p><strong>Student Name:</strong> {selectedReport.student?.name || "N/A"}</p>
-                        <p><strong>Registration Number:</strong> {selectedReport.student?.registrationNumber || "N/A"}</p>
-                        <p><strong>Email:</strong> {selectedReport.student?.email || "N/A"}</p>
-                        <p><strong>Reported By:</strong> {selectedReport.reportedBy?.name || "N/A"} ({selectedReport.reportedBy?.email || "N/A"})</p>
-                        <p><strong>Reason:</strong> {selectedReport.sicknessDetails || "N/A"}</p>
-                        <p><strong>Date:</strong> {selectedReport.date ? new Date(selectedReport.date).toLocaleDateString() : "N/A"}</p>
-                    </div>
-                    <div className="p-6 border-t bg-gray-50 flex justify-end space-x-4">
-                        <button onClick={() => setSelectedReport(null)} className="px-4 py-2 text-gray-700 hover:text-gray-900">
-                            Cancel
-                        </button>
-                        <button
-                            onClick={() => handleDecision(selectedReport._id, "rejected")}
-                            className={`px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 ${
-                                selectedReport.status !== "pending" ? "opacity-50 cursor-not-allowed" : ""
-                            }`}
-                            disabled={selectedReport.status !== "pending"}
-                        >
-                            Reject
-                        </button>
-                        <button
-                            onClick={() => handleDecision(selectedReport._id, "approved")}
-                            className={`px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 ${
-                                selectedReport.status !== "pending" ? "opacity-50 cursor-not-allowed" : ""
-                            }`}
-                            disabled={selectedReport.status !== "pending"}
-                        >
-                            Approve
-                        </button>
-                    </div>
-                </div>
-            </div>
-        )}
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                                <div className="p-6 border-b">
+                                    <h2 className="text-2xl font-bold text-gray-900">Student Details</h2>
+                                </div>
+                                <div className="p-6 space-y-4">
+                                    <p><strong>Student Name:</strong> {selectedReport.student?.name || "N/A"}</p>
+                                    <p><strong>Registration Number:</strong> {selectedReport.student?.registrationNumber || "N/A"}</p>
+                                    <p><strong>Email:</strong> {selectedReport.student?.email || "N/A"}</p>
+                                    <p><strong>Reported By:</strong> {selectedReport.reportedBy?.name || "N/A"} ({selectedReport.reportedBy?.email || "N/A"})</p>
+                                    <p><strong>Reason:</strong> {selectedReport.sicknessDetails || "N/A"}</p>
+                                    <p><strong>Date:</strong> {selectedReport.date ? new Date(selectedReport.date).toLocaleDateString() : "N/A"}</p>
+                                </div>
+                                <div className="p-6 border-t bg-gray-50 flex justify-end space-x-4">
+                                    <button onClick={() => setSelectedReport(null)} className="px-4 py-2 text-gray-700 hover:text-gray-900">
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={() => handleDecision(selectedReport._id, "rejected")}
+                                        className={`px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 ${
+                                            selectedReport.status !== "pending" ? "opacity-50 cursor-not-allowed" : ""
+                                        }`}
+                                        disabled={selectedReport.status !== "pending"}
+                                    >
+                                        Reject
+                                    </button>
+                                    <button
+                                        onClick={() => handleDecision(selectedReport._id, "approved")}
+                                        className={`px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 ${
+                                            selectedReport.status !== "pending" ? "opacity-50 cursor-not-allowed" : ""
+                                        }`}
+                                        disabled={selectedReport.status !== "pending"}
+                                    >
+                                        Approve
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

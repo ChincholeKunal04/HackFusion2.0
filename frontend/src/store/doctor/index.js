@@ -7,6 +7,8 @@ const initialState = {
     error: null,
 }; 
 
+const backendURL = import.meta.env.VITE_BACKEND_URI
+
 export const fetchAllHealthReports = createAsyncThunk(
     "health/fetchAllHealthReports",
     async (_, { rejectWithValue }) => {
@@ -17,7 +19,7 @@ export const fetchAllHealthReports = createAsyncThunk(
                 throw new Error("Token not found in sessionStorage");
             }
 
-            const response = await axios.get("http://localhost:8000/api/doctor/health-reports", {
+            const response = await axios.get(`${backendURL}/api/doctor/health-reports`, {
                 headers: { Authorization: `Bearer ${token}` },
                 withCredentials: true,
             });
@@ -39,7 +41,7 @@ export const approveHealthReport = createAsyncThunk(
                 throw new Error("Token not found in sessionStorage");
             }
             const response = await axios.put(
-                `http://localhost:8000/api/doctor/approve-health/${reportId}`,
+                `${backendURL}/api/doctor/approve-health/${reportId}`,
                 {},
                 {
                     headers: { Authorization: `Bearer ${token}` }, 
@@ -63,7 +65,7 @@ export const rejectHealthReport = createAsyncThunk(
             }
 
             const response = await axios.put(
-                `http://localhost:8000/api/doctor/health-report/reject/${reportId}`,
+                `${backendURL}/api/doctor/health-report/reject/${reportId}`,
                 {},
                 {
                     headers: { Authorization: `Bearer ${token}` }, 

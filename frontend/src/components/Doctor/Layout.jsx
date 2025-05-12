@@ -4,7 +4,6 @@ import { Outlet } from 'react-router-dom'
 const DoctorLayout = () => {
   return (
     <div>
-      doctor Layout
       <main>
         <Outlet></Outlet>
       </main>

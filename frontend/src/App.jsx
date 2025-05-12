@@ -18,6 +18,12 @@ import { useEffect } from "react";
 import { Candidatelist, Election, Registerstudent, Results, Voting } from "./pages/student/election";
 import Electionui from "./components/student/Election/electionui";
 
+import Dashboard from "./pages/admin/Dashboard";
+import AdminElection from "./pages/admin/Election";
+import AccountVerification from "./pages/admin/AccountVerification";
+import AdminComplaints from "./pages/admin/AdminComplaints";
+import AdminApplications from "./pages/admin/AdminApplications";
+
 function App() {
     const { isAuthenticated, user, isLoading } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
@@ -31,7 +37,7 @@ function App() {
         }
     }, [isAuthenticated, dispatch]);
 
-    // console.log("isAuthenticated:", isAuthenticated);
+    console.log("isAuthenticated:", isAuthenticated);
     console.log("user:", user ? user : "No user");
 
     if (isLoading) {
@@ -41,6 +47,13 @@ function App() {
     return (
         //  <Router>
             <Routes>
+                <Route 
+                    path="/"
+                    element={
+                        <CheckAuth isAuthenticated={isAuthenticated} user={user} >
+                        </CheckAuth>
+                    }
+                />
                 {/* Public Routes */}
                 <Route
                     path="/auth"
@@ -56,14 +69,18 @@ function App() {
 
                 {/* Protected Routes */}
                 <Route
-                    path="/admin/*"
+                    path="/admin"
                     element={
                         <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                             <AdminLayout />
                         </CheckAuth>
                     }
                 >
-                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="election" element={<AdminElection />} />
+                    <Route path="account-verification" element={<AccountVerification />} />
+                    <Route path="complaints" element={<AdminComplaints />} />
+                    <Route path="applications" element={<AdminApplications />} />
                 </Route>
 
                 <Route
@@ -97,7 +114,7 @@ function App() {
             </Route>
                 
                 <Route
-                    path="/doctor/*"
+                    path="/doctor"
                     element={
                         <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                             <DoctorLayout />

@@ -7,6 +7,8 @@ const initialState = {
     error: null,
 };
 
+const backendURL = import.meta.env.VITE_BACKEND_URI
+
 export const fetchAllComplaints = createAsyncThunk(
     "teacher/fetchAllComplaints",
     async (_, { rejectWithValue }) => {
@@ -16,7 +18,7 @@ export const fetchAllComplaints = createAsyncThunk(
                 throw new Error("Token not found in sessionStorage");
             }
 
-            const response = await axios.get("http://localhost:8000/api/teacher/complaints", {
+            const response = await axios.get(`${backendURL}/api/teacher/complaints`, {
                 headers: { Authorization: `Bearer ${token}` },
                 withCredentials: true,
             });
@@ -38,7 +40,7 @@ export const revealIdentityVote = createAsyncThunk(
             }
 
             const response = await axios.put(
-                `http://localhost:8000/api/teacher/reveal-identity/${complaintId}`,
+                `${backendURL}/api/teacher/reveal-identity/${complaintId}`,
                 {},
                 {
                     headers: { Authorization: `Bearer ${token}` },

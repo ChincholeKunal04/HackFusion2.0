@@ -8,6 +8,8 @@ const initialState = {
     error: null,
 };
 
+const backendURL = import.meta.env.VITE_BACKEND_URI
+
 export const fetchAllLeaveReports = createAsyncThunk(
     "teacher/fetchAllLeaveReports",
     async (_, { rejectWithValue }) => {
@@ -17,7 +19,7 @@ export const fetchAllLeaveReports = createAsyncThunk(
                 throw new Error("Token not found in sessionStorage");
             }
 
-            const response = await axios.get("http://localhost:8000/api/teacher/leave-reports", {
+            const response = await axios.get(`${backendURL}/api/teacher/leave-reports`, {
                 headers: { Authorization: `Bearer ${token}` },
                 withCredentials: true,
             });
@@ -38,7 +40,7 @@ export const fetchAllApprovedHealthReports = createAsyncThunk(
                 throw new Error("Token not found in sessionStorage");
             }
 
-            const response = await axios.get("http://localhost:8000/api/teacher/approved-health-reports", {
+            const response = await axios.get(`${backendURL}/api/teacher/approved-health-reports`, {
                 headers: { Authorization: `Bearer ${token}` },
                 withCredentials: true,
             });
