@@ -4,7 +4,7 @@ import { fetchAllCheatingReports, fetchCheatingReportById } from '../controller/
 import { verifyStudent } from '../middleware/verifyStudent.middleware.js';
 import { fetchAllComplaints, fetchSpecificComplaint } from '../controller/anonymousComplaint/anonymousComplaint.controller.js';
 import { submitApplication, fetchSpecificApplication, fetchAllApplications } from '../controller/application/application.controller.js';
-import { bookFacility, fetchFacilityApplications, fetchFacilityApplicationById } from '../controller/facility/facility.controller.js';
+// import { bookFacility, fetchFacilityApplications, fetchFacilityApplicationById } from '../controller/facility/facility.controller.js';
 import { applyForElection, initiateVote, verifyOtp, calculateElectionResult, fetchAllElectionResults, fetchAllElections, fetchAllCandidates, getCandidatesForElection } from '../controller/election/election.controller.js';
 import upload from '../middleware/imageUpload.middleware.js';
 
@@ -31,9 +31,9 @@ studentRouter.post("/apply-application", verifyStudent, upload.array("files", 5)
 studentRouter.get("/applications", verifyStudent, fetchAllApplications);
 studentRouter.get("/application/:applicationId", verifyStudent, fetchSpecificApplication);
 
-studentRouter.post("/book-facility", verifyStudent, bookFacility);
-studentRouter.get("/facility-applications", verifyStudent, fetchFacilityApplications);
-studentRouter.get("/facility-application/:applicationId", verifyStudent, fetchFacilityApplicationById)
+// studentRouter.post("/book-facility", verifyStudent, bookFacility);
+// studentRouter.get("/facility-applications", verifyStudent, fetchFacilityApplications);
+// studentRouter.get("/facility-application/:applicationId", verifyStudent, fetchFacilityApplicationById)
 
 studentRouter.post("/apply-election", verifyStudent, applyForElection);
 studentRouter.post("/vote", verifyStudent, initiateVote);
