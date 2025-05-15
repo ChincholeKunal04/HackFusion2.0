@@ -32,4 +32,4 @@ A MERN stack application to digitize college administration processes, ensuring 
     # Frontend
     npm run dev
     
-5. hello
+5. hello Testing
