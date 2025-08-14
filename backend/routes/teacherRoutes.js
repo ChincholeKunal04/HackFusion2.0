@@ -22,6 +22,7 @@ teacherRouter.put("/reveal-identity/:complaintId", verifyTeacher, revealIdentity
 teacherRouter.get("/complaints", verifyTeacher, fetchAllComplaints)
 teacherRouter.get("/complaint/:complaintId", verifyTeacher, fetchSpecificComplaint)
 
+
 teacherRouter.post("/apply-application", verifyTeacher, upload.single("proof"), submitApplication);
 teacherRouter.get("/applications", verifyTeacher, fetchAllApplications);
 teacherRouter.get("/application/:applicationId", verifyTeacher, fetchSpecificApplication)

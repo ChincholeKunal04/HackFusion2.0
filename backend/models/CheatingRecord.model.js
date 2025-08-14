@@ -25,6 +25,15 @@ const cheatingRecordSchema = new Schema({
     course: {
       type: String,
       required: true
+    },
+    actionTaken: {
+      type: String,
+      enum: ["warning", "marks deducted", "suspended", "expelled", "other"],
+      default: "warning"
+    },
+    actionDetails: {
+      type: String,
+      default: ""
     }
 }, { timestamps: true });
 
