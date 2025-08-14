@@ -24,6 +24,12 @@ import AccountVerification from "./pages/admin/AccountVerification";
 import AdminComplaints from "./pages/admin/AdminComplaints";
 import AdminApplications from "./pages/admin/AdminApplications";
 
+
+import Complaints from "./pages/teacher/Complaints";
+import CheatingReportPage from "./pages/teacher/CheatingReportPage";
+import LeaveReportList from "./pages/teacher/LeaveReport";
+import HealthReportList from "./pages/teacher/HealthReport";
+
 function App() {
     const { isAuthenticated, user, isLoading } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
@@ -92,6 +98,10 @@ function App() {
                     }
                 >
                     <Route path="dashboard" element={<TeacherDashboard />} />
+                    <Route path="complaints" element={<Complaints />} />
+                    <Route path="cheating-records" element={< CheatingReportPage/>} />
+                    <Route path="leave-reports" element={<LeaveReportList/>}/>
+                    <Route path="health-reports" element={<HealthReportList/>}/>
                 </Route>
 
                 <Route path="/student/*" element={<StudentLayout />}>

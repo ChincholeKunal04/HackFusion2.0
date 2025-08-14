@@ -30,6 +30,8 @@ const fetchAllLeaveReports = async (req, res) => {
     }
 }
 
+
+  
 const fetchAllApprovedHealthReports = async (req, res) => {
     try {
         const teacherId = req.user.userId;

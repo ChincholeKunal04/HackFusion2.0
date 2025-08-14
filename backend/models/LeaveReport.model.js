@@ -27,7 +27,8 @@ const leaveReportSchema = new mongoose.Schema({
   isNotified: {
     type: Boolean,
     default: false
-  }
+  },
+  
 }, { timestamps: true });
 
 const LeaveReport = mongoose.model("LeaveReport", leaveReportSchema);

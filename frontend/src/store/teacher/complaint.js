@@ -2,27 +2,26 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-    complaints: [], // For storing complaints
+    complaints: [],
     isLoading: false,
     error: null,
 };
 
-const backendURL = import.meta.env.VITE_BACKEND_URI
+const backendURL = import.meta.env.VITE_BACKEND_URI;
 
 export const fetchAllComplaints = createAsyncThunk(
     "teacher/fetchAllComplaints",
     async (_, { rejectWithValue }) => {
         try {
             const token = sessionStorage.getItem("token");
-            if (!token) {
-                throw new Error("Token not found in sessionStorage");
-            }
+            if (!token) throw new Error("Token not found in sessionStorage");
 
             const response = await axios.get(`${backendURL}/api/teacher/complaints`, {
                 headers: { Authorization: `Bearer ${token}` },
                 withCredentials: true,
             });
-            return response.data.data; // Assuming the response contains a `data` field
+
+            return response.data.data; // Assuming backend sends { success, data }
         } catch (error) {
             console.error("Axios Error:", error.response?.data);
             return rejectWithValue(error.response?.data || error.message);
@@ -32,21 +31,20 @@ export const fetchAllComplaints = createAsyncThunk(
 
 export const revealIdentityVote = createAsyncThunk(
     "teacher/revealIdentityVote",
-    async (complaintId, { rejectWithValue }) => {
+    async ({ complaintId, complaintType }, { rejectWithValue }) => {
         try {
             const token = sessionStorage.getItem("token");
-            if (!token) {
-                throw new Error("Token not found in sessionStorage");
-            }
-
+            if (!token) throw new Error("Token not found in sessionStorage");
+            console.log(complaintId)
             const response = await axios.put(
                 `${backendURL}/api/teacher/reveal-identity/${complaintId}`,
-                {},
+                { type: complaintType }, // Send complaintType in the body
                 {
                     headers: { Authorization: `Bearer ${token}` },
                     withCredentials: true,
                 }
             );
+
             return { complaintId, message: response.data.message };
         } catch (error) {
             console.error("Axios Error:", error.response?.data);
@@ -55,20 +53,21 @@ export const revealIdentityVote = createAsyncThunk(
     }
 );
 
+
 const complaintSlice = createSlice({
     name: "complaints",
     initialState,
-    reducers: {}, 
+    reducers: {},
     extraReducers: (builder) => {
         builder
 
+            // Fetch Complaints
             .addCase(fetchAllComplaints.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
             })
             .addCase(fetchAllComplaints.fulfilled, (state, action) => {
-                state.loading = false;
-                // Normalize the student field
+                state.isLoading = false;
                 state.complaints = action.payload.map((complaint) => ({
                     ...complaint,
                     student: {
@@ -82,6 +81,7 @@ const complaintSlice = createSlice({
                 state.error = action.payload?.message || "Error fetching complaints";
             })
 
+            // Reveal Identity Vote
             .addCase(revealIdentityVote.pending, (state) => {
                 state.isLoading = true;
             })
@@ -89,7 +89,11 @@ const complaintSlice = createSlice({
                 state.isLoading = false;
                 state.complaints = state.complaints.map((complaint) =>
                     complaint._id === action.payload.complaintId
-                        ? { ...complaint, isIdentityRevealed: true }
+                        ? {
+                              ...complaint,
+                              isAnonymous: false,
+                              student: complaint.student, // assumed student already exists
+                          }
                         : complaint
                 );
             })
